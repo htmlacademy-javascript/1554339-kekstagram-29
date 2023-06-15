@@ -31,14 +31,14 @@ const MESSAGE = [
 
 const NEW_OBJECTS_COUNT = 25;
 
-const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
-
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
   const result = Math.random() * (upper - lower + 1) + lower;
   return Math.floor(result);
 };
+
+const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 const createRandomId = (min, max) => {
   const previousValues = [];
@@ -57,8 +57,10 @@ const createRandomId = (min, max) => {
   };
 };
 
+const randomIdComment = createRandomId(100, 500); //вместо 63 строки
+
 const createComment = () => {
-  const randomIdComment = createRandomId(100, 500);
+  // const randomIdComment = createRandomId(100, 500);
   const randomAvatar = getRandomInteger(1, 6);
 
   return {
@@ -69,13 +71,18 @@ const createComment = () => {
   };
 };
 
+const randomId = createRandomId(1, 25); //вместо 78 строки
+
 const createObject = () => {
 
-  const randomId = createRandomId(1, 25);
+  // const randomId = createRandomId(1, 25);
+  const id = randomId();
 
   return {
-    id: randomId(),
-    url: 'photos/' + randomId() + '.jpg',
+    // id: randomId(),
+    // url: 'photos/' + randomId() + '.jpg',
+    id: id,
+    url: 'photos/' + id + '.jpg',
     description: getRandomArrayElement(DESCRIPTION),
     like: getRandomInteger(15, 200),
     comment: Array.from({length: getRandomInteger(0, 30)}, createComment),
@@ -85,4 +92,3 @@ const createObject = () => {
 const newObjects = Array.from({length: NEW_OBJECTS_COUNT}, createObject);
 
 console.log(newObjects);
-
