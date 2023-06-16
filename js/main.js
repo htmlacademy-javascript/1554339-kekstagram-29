@@ -57,30 +57,23 @@ const createRandomId = (min, max) => {
   };
 };
 
-const randomIdComment = createRandomId(100, 500); //вместо 63 строки
+const generateRandomCommentId = createRandomId(100, 850);
 
 const createComment = () => {
-  // const randomIdComment = createRandomId(100, 500);
   const randomAvatar = getRandomInteger(1, 6);
 
   return {
-    id: randomIdComment(),
+    id: generateRandomCommentId(),
     avatar: 'img/avatar-' + randomAvatar + '.svg',
     message: getRandomArrayElement(MESSAGE),
     name: getRandomArrayElement(NAMES),
   };
 };
 
-const randomId = createRandomId(1, 25); //вместо 78 строки
-
-const createObject = () => {
-
-  // const randomId = createRandomId(1, 25);
-  const id = randomId();
+const createObject = (generateRandomId) => {
+  const id = generateRandomId();
 
   return {
-    // id: randomId(),
-    // url: 'photos/' + randomId() + '.jpg',
     id: id,
     url: 'photos/' + id + '.jpg',
     description: getRandomArrayElement(DESCRIPTION),
@@ -89,6 +82,13 @@ const createObject = () => {
   };
 };
 
-const newObjects = Array.from({length: NEW_OBJECTS_COUNT}, createObject);
+const createAllObjects = () => {
+  const generateRandomId = createRandomId(1, NEW_OBJECTS_COUNT);
+  const newObjects = [];
+  for (let i = 0; i < NEW_OBJECTS_COUNT; i++) {
+    newObjects.push(createObject(generateRandomId));
+  }
+  console.log(newObjects);
+};
 
-console.log(newObjects);
+createAllObjects();
