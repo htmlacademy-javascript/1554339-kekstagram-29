@@ -59,13 +59,24 @@ const createRandomId = (min, max) => {
 
 const generateRandomCommentId = createRandomId(100, 850);
 
+const createMessage = () => {
+  const messageCount = getRandomInteger(1, 2);
+  const message = [];
+
+  for (let i = 1; i <= messageCount; i++) {
+    message.push(getRandomArrayElement(MESSAGE));
+  }
+
+  return message;
+};
+
 const createComment = () => {
   const randomAvatar = getRandomInteger(1, 6);
 
   return {
     id: generateRandomCommentId(),
     avatar: 'img/avatar-' + randomAvatar + '.svg',
-    message: getRandomArrayElement(MESSAGE),
+    message: createMessage(),
     name: getRandomArrayElement(NAMES),
   };
 };
@@ -85,9 +96,11 @@ const createObject = (generateRandomId) => {
 const createAllObjects = () => {
   const generateRandomId = createRandomId(1, NEW_OBJECTS_COUNT);
   const newObjects = [];
+
   for (let i = 0; i < NEW_OBJECTS_COUNT; i++) {
     newObjects.push(createObject(generateRandomId));
   }
+
   console.log(newObjects);
 };
 
