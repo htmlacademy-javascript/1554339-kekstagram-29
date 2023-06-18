@@ -29,7 +29,8 @@ const MESSAGE = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const NEW_OBJECTS_COUNT = 25;
+const OBJECTS_COUNT = 25;
+const COMMENTS_COUNT = 30;
 
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -57,7 +58,7 @@ const createRandomId = (min, max) => {
   };
 };
 
-const generateRandomCommentId = createRandomId(100, 850);
+//const generateRandomCommentId = createRandomId(100, 850);
 
 const createMessage = () => {
   const messageCount = getRandomInteger(1, 2);
@@ -69,6 +70,8 @@ const createMessage = () => {
 
   return message;
 };
+
+let generateRandomCommentId = createRandomId(1, COMMENTS_COUNT);
 
 const createComment = () => {
   const randomAvatar = getRandomInteger(1, 6);
@@ -94,11 +97,12 @@ const createObject = (generateRandomId) => {
 };
 
 const createAllObjects = () => {
-  const generateRandomId = createRandomId(1, NEW_OBJECTS_COUNT);
+  const generateRandomId = createRandomId(1, OBJECTS_COUNT);
   const newObjects = [];
 
-  for (let i = 0; i < NEW_OBJECTS_COUNT; i++) {
+  for (let i = 0; i < OBJECTS_COUNT; i++) {
     newObjects.push(createObject(generateRandomId));
+    generateRandomCommentId = createRandomId(1, COMMENTS_COUNT);
   }
 
   console.log(newObjects);
