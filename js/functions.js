@@ -44,3 +44,22 @@ console.log(getNumber('а я томат')); // NaN
 console.log(getNumber(2023)); // 2023
 console.log(getNumber(-1)); // 1
 console.log(getNumber(1.5)); //15
+
+const getTimeInMinutes = (time) => {
+  const newTimeFormat = Number(time.split(':')[0]) * 60 + Number(time.split(':')[1]);
+  return newTimeFormat;
+};
+
+const checkIsMeetTimOver = (startWorkDay, endWorkDay, startMeet, meetDuration) => {
+  const startWorkDayInMinutes = getTimeInMinutes(startWorkDay);
+  const endWorkDayInMinutes = getTimeInMinutes(endWorkDay);
+  const startMeetInMinutes = getTimeInMinutes(startMeet);
+  return ((startWorkDayInMinutes <= startMeetInMinutes + meetDuration) && (endWorkDayInMinutes >= startMeetInMinutes + meetDuration));
+};
+
+console.log('Выходит ли встреча за рамки рабочего дня');
+console.log(checkIsMeetTimOver('08:00', '17:30', '14:00', 90)); // true
+console.log(checkIsMeetTimOver('8:0', '10:0', '8:0', 120)); // true
+console.log(checkIsMeetTimOver('08:00', '14:30', '14:00', 90)); // false
+console.log(checkIsMeetTimOver('14:00', '17:30', '08:0', 90)); // false
+console.log(checkIsMeetTimOver('8:00', '17:30', '08:00', 900)); // false
