@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayElement} from './util.js';
+import {getRandomInteger, getRandomArrayElement, createRandomId} from './util.js';
 
 const DESCRIPTION = [
   'Зимой как-то холодно',
@@ -34,6 +34,11 @@ const MESSAGE = [
 const OBJECTS_COUNT = 25;
 const COMMENTS_COUNT = 30;
 
+const LIKES = {
+  min: 15,
+  max: 200,
+};
+
 const createMessage = () => {
   const messageCount = getRandomInteger(1, 2);
   const message = [];
@@ -45,31 +50,12 @@ const createMessage = () => {
   return message.join(' ');
 };
 
-const createRandomId = (min, max) => {
-  const previousValues = [];
-
-  return function () {
-    let currentValue = getRandomInteger(min, max);
-    if (previousValues.length >= (max - min + 1)) {
-      console.error('Перебраны все числа из диапазона от ' + min + ' до ' + max);
-      return null;
-    }
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInteger(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
-  };
-};
-
-let generateRandomCommentId = createRandomId(1, COMMENTS_COUNT);
-
-const createComment = () => {
+const createComment = (generateRandomCommentId) => {
   const randomAvatar = getRandomInteger(1, 6);
 
   return {
     id: generateRandomCommentId(),
-    avatar: 'img/avatar-' + randomAvatar + '.svg',
+    avatar: `img/avatar-${randomAvatar}.svg`,
     message: createMessage(),
     name: getRandomArrayElement(NAMES),
   };
@@ -77,13 +63,19 @@ const createComment = () => {
 
 const createObject = (generateRandomId) => {
   const id = generateRandomId();
+  const generateRandomCommentId = createRandomId(1, OBJECTS_COUNT);
+  const comments = [];
+
+  for (let i = 0; i < getRandomInteger(0, COMMENTS_COUNT); i++) {
+    comments.push(createComment(generateRandomCommentId));
+  }
 
   return {
     id: id,
-    url: 'photos/' + id + '.jpg',
+    url: `photos/${id}.jpg`,
     description: getRandomArrayElement(DESCRIPTION),
-    like: getRandomInteger(15, 200),
-    comment: Array.from({length: getRandomInteger(0, 30)}, createComment),
+    like: getRandomInteger(LIKES.min, LIKES.max),
+    comment: comments,
   };
 };
 
@@ -93,10 +85,9 @@ const createAllObjects = () => {
 
   for (let i = 0; i < OBJECTS_COUNT; i++) {
     newObjects.push(createObject(generateRandomId));
-    generateRandomCommentId = createRandomId(1, COMMENTS_COUNT);
   }
 
-  console.log(newObjects);
+  return newObjects;
 };
 
 export {createAllObjects};
