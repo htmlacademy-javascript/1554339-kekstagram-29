@@ -1,34 +1,47 @@
-import {isEscapeKey} from './util.js';
-import {clearPictureList} from './pictures.js';
+import { isEscapeKey } from './util.js';
 
-const fullSizePicture = document.querySelector('.big-picture');
-const fullSizePictureButtonClose = fullSizePicture.querySelector('.big-picture__cancel');
-// const commentsList = fullSizePicture.querySelector('.social__comments');
-// const commentTemplate = commentsList.querySelector('.social__comment');
+const fullSizePictureContainer = document.querySelector('.big-picture');
+const fullSizePictureButtonClose = fullSizePictureContainer.querySelector('.big-picture__cancel');
+const fullSizePicture = fullSizePictureContainer.querySelector('.big-picture__img img');
+const fullSizePictureDiscription = fullSizePictureContainer.querySelector('.social__caption');
+const fullSizePictureLikes = fullSizePictureContainer.querySelector('.likes-count');
+const fullSizePictureComments = fullSizePictureContainer.querySelector('.comments-count');
+const fullSizePictureCommentCount = fullSizePictureContainer.querySelector('.social__comment-count');
+const fullSizePictureCommentLoader = fullSizePictureContainer.querySelector('.comments-loader');
 
-const getFullSizePictureData = ({url, description, like, comment}) => {
-  fullSizePicture.querySelector('.big-picture__img').querySelector('img').src = url;
-  fullSizePicture.querySelector('.likes-count').textContent = like;
-  fullSizePicture.querySelector('.comments-count').textContent = comment.length;
-  fullSizePicture.querySelector('.social__caption').textContent = description;
-
-  fullSizePicture.querySelector('.social__comment-count').classList.add('hidden');
-  fullSizePicture.querySelector('.comments-loader').classList.add('hidden');
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    fullSizePictureContainer.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
 };
 
-function closeFullSizePicture () {
-  fullSizePicture.classList.add('hidden');
-  // clearPictureList();
-}
+const closeFullSizePicture = () => {
+  fullSizePictureContainer.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
 
 fullSizePictureButtonClose.addEventListener('click', () => {
   closeFullSizePicture();
 });
 
-function openFullSizePicture (pictureData) {
-  fullSizePicture.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  getFullSizePictureData(pictureData);
-}
+const openFullSizePicture = (evt) => {
+  evt.preventDefault();
+
+  if (evt.target.matches('.picture__img')) {
+    fullSizePictureContainer.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    document.addEventListener('keydown', onDocumentKeydown);
+    fullSizePictureCommentCount.classList.add('hidden');
+    fullSizePictureCommentLoader.classList.add('hidden');
+
+    fullSizePicture.src = evt.target.src;
+    fullSizePictureDiscription.textContent = evt.target.alt;
+    fullSizePictureLikes.textContent = evt.target.parentNode.querySelector('.picture__likes').textContent;
+    fullSizePictureComments.textContent = evt.target.parentNode.querySelector('.picture__comments').textContent;
+  }
+};
 
 export {openFullSizePicture};
