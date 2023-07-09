@@ -1,6 +1,7 @@
-import {createAllObjects} from './data.js';
+import {objects} from './data.js';
 import {createPictureCards} from './pictures.js';
 
-createPictureCards(createAllObjects());
+createPictureCards(objects);
+// console.log(objects);
 
 // console.log(createPictureCards(createAllObjects()));

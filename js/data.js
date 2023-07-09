@@ -90,4 +90,6 @@ const createAllObjects = () => {
   return newObjects;
 };
 
-export {createAllObjects};
+const objects = createAllObjects();
+
+export {objects};
