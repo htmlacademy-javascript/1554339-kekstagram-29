@@ -29,6 +29,7 @@ const closeFullSizePicture = () => {
 
 fullSizePictureButtonClose.addEventListener('click', () => {
   closeFullSizePicture();
+  fullSizePictureCommentLoader.classList.remove('hidden');
 });
 
 const getComments = (commentsList, commentsListStart, commentsListEnd) => {
@@ -50,21 +51,33 @@ const getComments = (commentsList, commentsListStart, commentsListEnd) => {
   fullSizePictureCommentList.append(commentFragment);
 };
 
+const loadCommentsDescribe = (commentsList, commentsListStart, commentsListEnd, commentsCount) => {
+  getComments(commentsList, commentsListStart, commentsListEnd);
+  fullSizePictureCommentCount.innerHTML = `${Math.min(commentsListEnd, commentsCount)} из ${fullSizePictureDisplayedCommentCount.textContent} комментариев`;
+};
+
+const hideCommentsLoader = (commentsListEnd, commentsCount) => {
+  if (commentsListEnd >= commentsCount) {
+    fullSizePictureCommentLoader.classList.add('hidden');
+  }
+};
+
 const loadComments = (allComments) => {
   const commentsCount = allComments.comment.length;
   fullSizePictureCommentList.innerHTML = '';
   const commentsList = allComments.comment;
-  let commentsListStart = 0;
+  const commentsListStart = 0;
   let commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
 
-  getComments(commentsList, commentsListStart, commentsListEnd);
-  fullSizePictureCommentCount.innerHTML = `${Math.min(UPLOAD_COMMENTS_BY_CLICK, commentsCount)} из ${fullSizePictureDisplayedCommentCount.textContent} комментариев`;
+  loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, commentsCount);
+
+  hideCommentsLoader(commentsListEnd, commentsCount);
 
   fullSizePictureCommentLoader.addEventListener('click', () => {
-    commentsListStart += UPLOAD_COMMENTS_BY_CLICK;
+    fullSizePictureCommentList.innerHTML = '';
     commentsListEnd += UPLOAD_COMMENTS_BY_CLICK;
-    fullSizePictureCommentCount.innerHTML = `${Math.min(commentsListEnd, commentsCount)} из ${fullSizePictureDisplayedCommentCount.textContent} комментариев`;
-    getComments(commentsList, commentsListStart, commentsListEnd);
+    loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, commentsCount);
+    hideCommentsLoader(commentsListEnd, commentsCount);
   });
 };
 
