@@ -19,6 +19,7 @@ const createPictureCards = (pictureCards) => {
     pictureFragment.appendChild(pictureElement);
   });
 
+
   pictureList.addEventListener('click', openFullSizePicture);
 
   pictureList.append(pictureFragment);

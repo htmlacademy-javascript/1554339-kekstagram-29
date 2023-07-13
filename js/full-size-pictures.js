@@ -1,5 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { objects } from './data.js';
+import { openModal } from './forms.js';
 
 const fullSizePictureContainer = document.querySelector('.big-picture');
 const fullSizePictureButtonClose = fullSizePictureContainer.querySelector('.big-picture__cancel');
@@ -82,6 +83,7 @@ const loadComments = (allComments) => {
 };
 
 const openFullSizePicture = (evt) => {
+
   if (evt.target.matches('.picture__img')) {
     fullSizePictureContainer.classList.remove('hidden');
     document.body.classList.add('modal-open');
@@ -92,6 +94,10 @@ const openFullSizePicture = (evt) => {
     fullSizePictureLikes.textContent = evt.target.parentNode.querySelector('.picture__likes').textContent;
     fullSizePictureDisplayedCommentCount.textContent = evt.target.parentNode.querySelector('.picture__comments').textContent;
     loadComments(objects.find((object) => object.id === Number(evt.target.id)));
+  }
+
+  if (evt.target.matches('.img-upload__input')) {
+    evt.target.addEventListener('change', openModal);
   }
 };
 
