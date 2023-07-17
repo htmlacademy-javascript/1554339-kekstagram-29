@@ -1,5 +1,6 @@
 import { isEscapeKey } from './util.js';
-
+// import { initEditImage } from './edit-image.js';
+// initEditImage();
 const uploadPictureForm = document.querySelector('.img-upload__form');
 const uploadPictureOverlay = uploadPictureForm.querySelector('.img-upload__overlay');
 const closeButton = uploadPictureForm.querySelector('.img-upload__cancel');
@@ -75,6 +76,7 @@ const onFormSubmit = (evt) => {
 };
 
 uploadPictureForm.addEventListener('submit', onFormSubmit);
+// initEditImage();
 
 function onModalKeydown(evt) {
   if (isEscapeKey(evt) && !(document.activeElement === hashtagsField || document.activeElement === descriptionField)) {
@@ -83,4 +85,4 @@ function onModalKeydown(evt) {
   }
 }
 
-export {openModal};
+export {openModal, formPristine};
