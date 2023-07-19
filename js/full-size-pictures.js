@@ -1,8 +1,9 @@
 import { isEscapeKey } from './util.js';
-import { objects } from './data.js';
 import { openModal } from './forms.js';
 import { editImage } from './edit-image.js';
+import { getData } from './api.js';
 
+const data = await getData();
 const fullSizePictureContainer = document.querySelector('.big-picture');
 const fullSizePictureButtonClose = fullSizePictureContainer.querySelector('.big-picture__cancel');
 const fullSizePicture = fullSizePictureContainer.querySelector('.big-picture__img img');
@@ -59,9 +60,9 @@ const loadCommentsDescribe = (commentsList, commentsListStart, commentsListEnd, 
 };
 
 const loadComments = (allComments) => {
-  const commentsCount = allComments.comment.length;
+  const commentsCount = allComments.comments.length;
   fullSizePictureCommentList.innerHTML = '';
-  const commentsList = allComments.comment;
+  const commentsList = allComments.comments;
   const commentsListStart = 0;
   let commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
 
@@ -78,7 +79,9 @@ const loadComments = (allComments) => {
     if (commentsListEnd >= commentsCount) {
       fullSizePictureCommentLoader.classList.add('hidden');
       commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
+      console.log(commentsListEnd, commentsCount);
     }
+    console.log(commentsListEnd, commentsCount);
   });
 };
 
@@ -93,7 +96,7 @@ const openFullSizePicture = (evt) => {
     fullSizePictureDiscription.textContent = evt.target.alt;
     fullSizePictureLikes.textContent = evt.target.parentNode.querySelector('.picture__likes').textContent;
     fullSizePictureDisplayedCommentCount.textContent = evt.target.parentNode.querySelector('.picture__comments').textContent;
-    loadComments(objects.find((object) => object.id === Number(evt.target.id)));
+    loadComments(data.find((object) => object.id === Number(evt.target.id)));
   }
 
   if (evt.target.matches('.img-upload__input')) {
