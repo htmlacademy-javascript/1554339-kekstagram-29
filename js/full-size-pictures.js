@@ -1,8 +1,9 @@
 import { isEscapeKey } from './util.js';
-import { objects } from './data.js';
 import { openModal } from './forms.js';
 import { editImage } from './edit-image.js';
+import { getData } from './api.js';
 
+const data = await getData();
 const fullSizePictureContainer = document.querySelector('.big-picture');
 const fullSizePictureButtonClose = fullSizePictureContainer.querySelector('.big-picture__cancel');
 const fullSizePicture = fullSizePictureContainer.querySelector('.big-picture__img img');
@@ -58,26 +59,31 @@ const loadCommentsDescribe = (commentsList, commentsListStart, commentsListEnd, 
   fullSizePictureCommentCount.innerHTML = `${Math.min(commentsListEnd, commentsCount)} из ${fullSizePictureDisplayedCommentCount.textContent} комментариев`;
 };
 
-const loadComments = (allComments) => {
-  const commentsCount = allComments.comment.length;
+const loadComments = (object, length) => {
   fullSizePictureCommentList.innerHTML = '';
-  const commentsList = allComments.comment;
+  const commentsList = object.comments;
   const commentsListStart = 0;
   let commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
 
-  loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, commentsCount);
-  if (commentsListEnd >= commentsCount) {
+  loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, length);
+  if (commentsListEnd >= length) {
     fullSizePictureCommentLoader.classList.add('hidden');
-    commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
   }
 
+  let countClick = 1;
+
   fullSizePictureCommentLoader.addEventListener('click', () => {
+    countClick += 1;
     fullSizePictureCommentList.innerHTML = '';
     commentsListEnd += UPLOAD_COMMENTS_BY_CLICK;
-    loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, commentsCount);
-    if (commentsListEnd >= commentsCount) {
+    loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, length);
+
+    if (countClick * 5 >= length) {
       fullSizePictureCommentLoader.classList.add('hidden');
+      countClick = 1;
       commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
+    } else {
+      fullSizePictureCommentLoader.classList.remove('hidden');
     }
   });
 };
@@ -93,7 +99,8 @@ const openFullSizePicture = (evt) => {
     fullSizePictureDiscription.textContent = evt.target.alt;
     fullSizePictureLikes.textContent = evt.target.parentNode.querySelector('.picture__likes').textContent;
     fullSizePictureDisplayedCommentCount.textContent = evt.target.parentNode.querySelector('.picture__comments').textContent;
-    loadComments(objects.find((object) => object.id === Number(evt.target.id)));
+    const objectArray = data.find((object) => object.id === Number(evt.target.id));
+    loadComments(objectArray, objectArray.comments.length);
   }
 
   if (evt.target.matches('.img-upload__input')) {
