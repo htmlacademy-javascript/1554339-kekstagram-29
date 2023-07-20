@@ -155,6 +155,12 @@ const onButtonPlusClick = () => {
   }
 };
 
+const reset = () => {
+  setScale(100);
+  currentEffect = 'none';
+  setChoisenEffect();
+};
+
 const editImage = () => {
   createFilterSlider();
   buttonMinus.addEventListener('click', onButtonMinusClick);
@@ -162,4 +168,4 @@ const editImage = () => {
 };
 
 
-export { editImage };
+export { editImage, reset };

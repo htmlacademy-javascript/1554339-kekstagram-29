@@ -59,29 +59,32 @@ const loadCommentsDescribe = (commentsList, commentsListStart, commentsListEnd, 
   fullSizePictureCommentCount.innerHTML = `${Math.min(commentsListEnd, commentsCount)} из ${fullSizePictureDisplayedCommentCount.textContent} комментариев`;
 };
 
-const loadComments = (allComments) => {
-  const commentsCount = allComments.comments.length;
+const loadComments = (object, length) => {
   fullSizePictureCommentList.innerHTML = '';
-  const commentsList = allComments.comments;
+  const commentsList = object.comments;
   const commentsListStart = 0;
   let commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
 
-  loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, commentsCount);
-  if (commentsListEnd >= commentsCount) {
+  loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, length);
+  if (commentsListEnd >= length) {
     fullSizePictureCommentLoader.classList.add('hidden');
-    commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
   }
 
+  let countClick = 1;
+
   fullSizePictureCommentLoader.addEventListener('click', () => {
+    countClick += 1;
     fullSizePictureCommentList.innerHTML = '';
     commentsListEnd += UPLOAD_COMMENTS_BY_CLICK;
-    loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, commentsCount);
-    if (commentsListEnd >= commentsCount) {
+    loadCommentsDescribe(commentsList, commentsListStart, commentsListEnd, length);
+
+    if (countClick * 5 >= length) {
       fullSizePictureCommentLoader.classList.add('hidden');
+      countClick = 1;
       commentsListEnd = UPLOAD_COMMENTS_BY_CLICK;
-      console.log(commentsListEnd, commentsCount);
+    } else {
+      fullSizePictureCommentLoader.classList.remove('hidden');
     }
-    console.log(commentsListEnd, commentsCount);
   });
 };
 
@@ -96,7 +99,8 @@ const openFullSizePicture = (evt) => {
     fullSizePictureDiscription.textContent = evt.target.alt;
     fullSizePictureLikes.textContent = evt.target.parentNode.querySelector('.picture__likes').textContent;
     fullSizePictureDisplayedCommentCount.textContent = evt.target.parentNode.querySelector('.picture__comments').textContent;
-    loadComments(data.find((object) => object.id === Number(evt.target.id)));
+    const objectArray = data.find((object) => object.id === Number(evt.target.id));
+    loadComments(objectArray, objectArray.comments.length);
   }
 
   if (evt.target.matches('.img-upload__input')) {

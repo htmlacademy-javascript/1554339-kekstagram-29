@@ -1,6 +1,25 @@
 import {openFullSizePicture} from './full-size-pictures.js';
 import { getData } from './api.js';
-import { showAlert } from './util.js';
+
+const ALERT_SHOW_TIME = 5000;
+
+const showAlert = (message) => {
+  const alert = document.createElement('div');
+  alert.style.position = 'absolute';
+  alert.style.zIndex = '20';
+  alert.style.left = '0';
+  alert.style.top = '0';
+  alert.style.right = '0';
+  alert.style.color = 'red';
+  alert.style.fontSize = '30px';
+  alert.style.textAlign = 'center';
+  alert.textContent = message;
+  document.body.append(alert);
+
+  setTimeout(() => {
+    alert.remove();
+  }, ALERT_SHOW_TIME);
+};
 
 const pictureList = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content;

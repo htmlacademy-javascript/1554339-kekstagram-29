@@ -1,6 +1,7 @@
 import { isEscapeKey } from './util.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
+import { reset } from './edit-image.js';
 
 const uploadPictureForm = document.querySelector('.img-upload__form');
 const uploadPictureOverlay = uploadPictureForm.querySelector('.img-upload__overlay');
@@ -8,6 +9,10 @@ const closeButton = uploadPictureForm.querySelector('.img-upload__cancel');
 const hashtagsField = uploadPictureForm.querySelector('.text__hashtags');
 const descriptionField = uploadPictureForm.querySelector('.text__description');
 const submitButton = document.querySelector('.img-upload__submit');
+
+const uploadForm = document.querySelector('.img-upload__form');
+const imagePreview = uploadForm.querySelector('.img-upload__preview');
+
 
 const hastagExp = /^#[a-zа-яë0-9]{1,19}$/i;
 const HASHTAGS = 5;
@@ -21,7 +26,7 @@ const formPristine = new Pristine(uploadPictureForm, {
   classTo: 'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
   errorTextParent: 'img-upload__field-wrapper', // Элемент, куда будет выводиться текст с ошибкой
   errorTextTag: 'p', // Тег, который будет обрамлять текст ошибки
-  errorTextClass: 'img-upload__field-wrapper--invalid' // Класс для элемента с текстом ошибки
+  errorTextClass: 'img-upload__field-wrapper--error' // Класс для элемента с текстом ошибки
 });
 
 const checkValidHashtag = () => {
@@ -34,14 +39,14 @@ const checkValidHashtag = () => {
   return valueArray.every((element) => element.match(hastagExp));
 };
 
-formPristine.addValidator(hashtagsField, checkValidHashtag, 'Невалидный хэш-тег');
+formPristine.addValidator(hashtagsField, checkValidHashtag, 'введён невалидный хэш-тег');
 
 const checkCountHashtag = () => {
   const string = hashtagsField.value.trim().split(' ').map((element) => element.toLowerCase());
   return (string.length <= HASHTAGS);
 };
 
-formPristine.addValidator(hashtagsField, checkCountHashtag, 'Максимум 5 хэш-тегов');
+formPristine.addValidator(hashtagsField, checkCountHashtag, 'превышено количество хэш-тегов');
 
 const checkUniqueHashtag = () => {
   const string = hashtagsField.value.trim().split(' ').map((element) => element.toLowerCase());
@@ -55,7 +60,7 @@ const checkUniqueHashtag = () => {
   return true;
 };
 
-formPristine.addValidator(hashtagsField, checkUniqueHashtag, 'Хэш-теги не могут повторяться');
+formPristine.addValidator(hashtagsField, checkUniqueHashtag, 'хэш-теги повторяются');
 
 const openModal = () => {
   uploadPictureOverlay.classList.remove('hidden');
@@ -104,6 +109,7 @@ const setOnFormSubmit = (callback) => {
       toggleSubmitButton(true);
       await callback(new FormData(uploadPictureForm));
       toggleSubmitButton();
+      reset();
     }
   });
 };
