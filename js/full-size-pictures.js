@@ -1,6 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { openModal } from './forms.js';
-import { editImage } from './edit-image.js';
+// import { editImage } from './edit-image.js';
 import { getData } from './api.js';
 
 const data = await getData();
@@ -105,7 +105,7 @@ const openFullSizePicture = (evt) => {
 
   if (evt.target.matches('.img-upload__input')) {
     evt.target.addEventListener('change', openModal);
-    editImage();
+    // editImage();
   }
 };
 
