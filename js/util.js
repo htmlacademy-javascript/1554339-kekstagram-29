@@ -23,4 +23,13 @@ const createRandomId = (min, max) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, createRandomId, isEscapeKey};
+const debaunce = (cb, delay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => cb.apply(this, rest), delay);
+  };
+};
+
+export {getRandomInteger, getRandomArrayElement, createRandomId, isEscapeKey, debaunce};

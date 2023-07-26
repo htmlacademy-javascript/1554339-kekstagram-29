@@ -3,33 +3,29 @@ const errorMessage = document.querySelector('#error').content.querySelector('.er
 const body = document.querySelector('body');
 
 const hideMessage = () => {
-  const messageElem = document.querySelector('.success') || document.querySelector('.error');
-  messageElem.remove();
-  document.removeEventListener('keydown', onDocumentKeydown);
-  body.removeEventListener('click', onBodyClick);
+  document.querySelector('.message').classList.add('hidden');
 };
 
-function onBodyClick(evt) {
-  if (
-    evt.target.closest('.success__inner') ||
-    evt.target.closest('.error__inner')
-  ) {
+const onOutSideClick = (evt) => {
+  if (evt.target.closest('.success__inner') || evt.target.closest('.error__inner')) {
     return;
   }
   hideMessage();
-}
+};
 
-function onDocumentKeydown(evt) {
+const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     hideMessage();
   }
-}
+};
 
 const showMessage = (messageElem, closeButtonClass) => {
   body.append(messageElem);
+  messageElem.classList.add('message');
+  messageElem.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
-  body.addEventListener('click', onBodyClick);
+  body.addEventListener('click', onOutSideClick);
   messageElem.querySelector(closeButtonClass).addEventListener('click', hideMessage);
 };
 

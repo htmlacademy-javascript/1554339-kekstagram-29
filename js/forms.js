@@ -1,7 +1,7 @@
 import { isEscapeKey } from './util.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
-import { reset } from './edit-image.js';
+import { reset, editImage } from './edit-image.js';
 
 const uploadPictureForm = document.querySelector('.img-upload__form');
 const uploadPictureOverlay = uploadPictureForm.querySelector('.img-upload__overlay');
@@ -9,16 +9,17 @@ const closeButton = uploadPictureForm.querySelector('.img-upload__cancel');
 const hashtagsField = uploadPictureForm.querySelector('.text__hashtags');
 const descriptionField = uploadPictureForm.querySelector('.text__description');
 const submitButton = document.querySelector('.img-upload__submit');
-
-const uploadForm = document.querySelector('.img-upload__form');
-const imagePreview = uploadForm.querySelector('.img-upload__preview');
-
+const uploadImageField = uploadPictureForm.querySelector('.img-upload__input');
+const uploadImagePreview = uploadPictureForm.querySelector('.img-upload__preview img');
+const effectsPreview = uploadPictureForm.querySelectorAll('.effects__preview');
 
 const hastagExp = /^#[a-zа-яë0-9]{1,19}$/i;
 const HASHTAGS = 5;
 
+const UPLOAD_FILE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+
 const SubmitButtonText = {
-  SUBMITTING: 'Отправка...',
+  SUBMITTING: 'Идет отправка',
   IDLE: 'ОПУБЛИКОВАТЬ',
 };
 
@@ -63,6 +64,7 @@ const checkUniqueHashtag = () => {
 formPristine.addValidator(hashtagsField, checkUniqueHashtag, 'хэш-теги повторяются');
 
 const openModal = () => {
+  editImage();
   uploadPictureOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onModalKeydown);
@@ -74,10 +76,10 @@ const closeModal = () => {
   uploadPictureOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onModalKeydown);
+  reset();
 };
 
 const onCloseButtonClick = () => closeModal();
-
 closeButton.addEventListener('click', onCloseButtonClick);
 
 const onFormSubmit = (evt) => {
@@ -94,11 +96,29 @@ function onModalKeydown(evt) {
   }
 }
 
+const showImagePreview = () => {
+  const uploadedFile = uploadImageField.files[0];
+  const isCorrectType = UPLOAD_FILE_TYPES.some((fileType) => uploadedFile.name.toLowerCase().endsWith(fileType));
+
+  if (isCorrectType) {
+    uploadImagePreview.src = URL.createObjectURL(uploadedFile);
+    Array.from(effectsPreview).forEach((el) => {
+      el.style.backgroundImage = `url(${URL.createObjectURL(uploadedFile)})`;
+    });
+  }
+};
+
+const onUploadFieldClick = () => showImagePreview();
+uploadImageField.addEventListener('change', onUploadFieldClick);
+
 const toggleSubmitButton = (isDisabled) => {
   submitButton.disabled = isDisabled;
-  submitButton.textContent = isDisabled
-    ? SubmitButtonText.SUBMITTING
-    : SubmitButtonText.IDLE;
+
+  if (isDisabled) {
+    submitButton.textContent = SubmitButtonText.SUBMITTING;
+  } else {
+    submitButton.textContent = SubmitButtonText.IDLE;
+  }
 };
 
 const setOnFormSubmit = (callback) => {
@@ -109,7 +129,6 @@ const setOnFormSubmit = (callback) => {
       toggleSubmitButton(true);
       await callback(new FormData(uploadPictureForm));
       toggleSubmitButton();
-      reset();
     }
   });
 };

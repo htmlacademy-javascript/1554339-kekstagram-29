@@ -135,13 +135,16 @@ const createFilterSlider = () => {
 
 const setScale = (value) => {
   imagePreview.style.transform = `scale(${value / 100})`;
+  fieldScaleImage.removeAttribute('value');
+  fieldScaleImage.setAttribute('value', `${value}%`);
 };
 
 const onButtonMinusClick = () => {
   const scaleValue = parseInt(fieldScaleImage.value.replace('%', ''), 10) - scale.STEP;
 
   if (scaleValue >= scale.MIN) {
-    fieldScaleImage.value = `${scaleValue}%`;
+    fieldScaleImage.removeAttribute('value');
+    fieldScaleImage.setAttribute('value', `${scaleValue}%`);
     setScale(scaleValue);
   }
 };
@@ -150,7 +153,9 @@ const onButtonPlusClick = () => {
   const scaleValue = parseInt(fieldScaleImage.value.replace('%', ''), 10) + scale.STEP;
 
   if (scaleValue <= scale.MAX) {
-    fieldScaleImage.value = `${scaleValue}%`;
+    fieldScaleImage.removeAttribute('value');
+    const value = `${scaleValue}%`;
+    fieldScaleImage.setAttribute('value', value);
     setScale(scaleValue);
   }
 };
@@ -159,6 +164,7 @@ const reset = () => {
   setScale(100);
   currentEffect = 'none';
   setChoisenEffect();
+  filterSlider.noUiSlider.destroy();
 };
 
 const editImage = () => {

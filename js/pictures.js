@@ -1,5 +1,7 @@
 import {openFullSizePicture} from './full-size-pictures.js';
 import { getData } from './api.js';
+import { setFilters, onFilterClick } from './sorting.js';
+import { debaunce } from './util.js';
 
 const ALERT_SHOW_TIME = 5000;
 
@@ -25,8 +27,16 @@ const pictureList = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content;
 const pictureFragment = document.createDocumentFragment();
 
-const clearPictureList = () => {
-  pictureList.innerHTML = '';
+const clearPictures = () => {
+  const pictures = pictureList.querySelectorAll('.picture');
+
+  if (!pictures) {
+    return;
+  }
+
+  for (let i = pictures.length - 1; i >= 0; i--) {
+    pictures[i].remove();
+  }
 };
 
 const createPictureCards = (data) => {
@@ -40,6 +50,7 @@ const createPictureCards = (data) => {
     pictureFragment.appendChild(pictureElement);
   });
 
+  clearPictures();
 
   pictureList.addEventListener('click', openFullSizePicture);
 
@@ -50,9 +61,10 @@ const createPictureCards = (data) => {
 
 try {
   const data = await getData();
+  setFilters(debaunce(() => onFilterClick(data)));
   createPictureCards(data);
 } catch (err) {
   showAlert(err.message);
 }
 
-export {createPictureCards, clearPictureList, pictureList};
+export {createPictureCards, pictureList};

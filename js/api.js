@@ -1,4 +1,4 @@
-const BASE_URL = 'https://29.javascript.pages.academy/kekstagram';
+const URL = 'https://29.javascript.pages.academy/kekstagram';
 
 const Route = {
   GET_DATA: '/data',
@@ -16,7 +16,7 @@ const ErrorText = {
 };
 
 const load = (route, errorText, method = Method.GET, body = null) =>
-  fetch(`${BASE_URL}${route}`, { method, body })
+  fetch(`${URL}${route}`, { method, body })
     .then((response) => {
       if (!response.ok) {
         throw new Error();
