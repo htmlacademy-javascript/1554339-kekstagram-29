@@ -1,7 +1,4 @@
 import {openFullSizePicture} from './full-size-pictures.js';
-import { getData } from './api.js';
-import { setFilters, onFilterClick } from './sorting.js';
-import { debaunce } from './util.js';
 
 const ALERT_SHOW_TIME = 5000;
 
@@ -59,12 +56,4 @@ const createPictureCards = (data) => {
   return pictureList;
 };
 
-try {
-  const data = await getData();
-  setFilters(debaunce(() => onFilterClick(data)));
-  createPictureCards(data);
-} catch (err) {
-  showAlert(err.message);
-}
-
-export {createPictureCards, pictureList};
+export {createPictureCards, pictureList, showAlert};
