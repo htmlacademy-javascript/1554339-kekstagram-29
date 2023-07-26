@@ -13,7 +13,7 @@ const uploadImageField = uploadPictureForm.querySelector('.img-upload__input');
 const uploadImagePreview = uploadPictureForm.querySelector('.img-upload__preview img');
 const effectsPreview = uploadPictureForm.querySelectorAll('.effects__preview');
 
-const hastagExp = /^#[a-zа-яë0-9]{1,19}$/i;
+const hashtagExp = /^#[a-zа-яë0-9]{1,19}$/i;
 const HASHTAGS = 5;
 
 const UPLOAD_FILE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
@@ -37,7 +37,7 @@ const checkValidHashtag = () => {
     return true;
   }
 
-  return valueArray.every((element) => element.match(hastagExp));
+  return valueArray.every((element) => element.match(hashtagExp));
 };
 
 formPristine.addValidator(hashtagsField, checkValidHashtag, 'введён невалидный хэш-тег');
@@ -90,7 +90,7 @@ const onFormSubmit = (evt) => {
 uploadPictureForm.addEventListener('submit', onFormSubmit);
 
 function onModalKeydown(evt) {
-  if (isEscapeKey(evt) && !(document.activeElement === hashtagsField || document.activeElement === descriptionField)) {
+  if (isEscapeKey(evt) && !(document.querySelector('.message')) && !(document.activeElement === hashtagsField || document.activeElement === descriptionField)) {
     evt.preventDefault();
     closeModal();
   }
@@ -140,7 +140,8 @@ setOnFormSubmit(async (data) => {
     showSuccessMessage();
   } catch {
     showErrorMessage();
+    //document.removeEventListener('keydown', onModalKeydown);
   }
 });
 
-export {openModal, formPristine};
+export { openModal, formPristine };
