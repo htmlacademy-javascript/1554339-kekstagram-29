@@ -3,7 +3,7 @@ import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 import { reset, editImage } from './edit-image.js';
 
-const hashtagExp = /^#[a-zа-яë0-9]{1,19}$/i;
+const HASHTAG_EXP = /^#[a-zа-яë0-9]{1,19}$/i;
 const HASHTAGS = 5;
 
 const UPLOAD_FILE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
@@ -37,7 +37,7 @@ const checkValidHashtag = () => {
     return true;
   }
 
-  return valueArray.every((element) => element.match(hashtagExp));
+  return valueArray.every((element) => element.match(HASHTAG_EXP));
 };
 
 const checkCountHashtag = () => {

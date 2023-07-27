@@ -1,8 +1,7 @@
 import { isEscapeKey } from './util.js';
 import { openModal } from './forms.js';
-import { getData } from './api.js';
+import { pictureListElement } from './pictures.js';
 
-const data = await getData();
 const UPLOAD_COMMENTS_BY_CLICK = 5;
 
 const fullSizePictureContainerElement = document.querySelector('.big-picture');
@@ -15,7 +14,6 @@ const fullSizePictureCommentListElement = fullSizePictureContainerElement.queryS
 const fullSizePictureCommentTemplate = fullSizePictureContainerElement.querySelector('.social__comment');
 const fullSizePictureCommentCountElement = fullSizePictureContainerElement.querySelector('.social__comment-count');
 const fullSizePictureCommentLoaderElement = fullSizePictureContainerElement.querySelector('.comments-loader');
-
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -93,7 +91,7 @@ const openFullSizePicture = (evt) => {
     fullSizePictureDescriptionElement.textContent = evt.target.alt;
     fullSizePictureLikesElement.textContent = evt.target.parentNode.querySelector('.picture__likes').textContent;
     fullSizePictureDisplayedCommentCountElement.textContent = evt.target.parentNode.querySelector('.picture__comments').textContent;
-    const objectArray = data.find((object) => object.id === Number(evt.target.id));
+    const objectArray = pictureListElement.find((object) => object.id === Number(evt.target.id));
     loadComments(objectArray, objectArray.comments.length);
   }
 
