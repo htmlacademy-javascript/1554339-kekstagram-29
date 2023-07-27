@@ -1,22 +1,23 @@
 import {openFullSizePicture} from './full-size-pictures.js';
 
 const ALERT_SHOW_TIME = 5000;
-
 const showAlert = (message) => {
   const alertElement = document.createElement('div');
+  alertElement.style.zIndex = '100';
   alertElement.style.position = 'absolute';
-  alertElement.style.zIndex = '20';
   alertElement.style.left = '0';
   alertElement.style.top = '0';
   alertElement.style.right = '0';
-  alertElement.style.color = 'red';
+  alertElement.style.padding = '25px 3px';
   alertElement.style.fontSize = '30px';
   alertElement.style.textAlign = 'center';
+  alertElement.style.color = 'red';
+
   alertElement.textContent = message;
   document.body.append(alertElement);
 
   setTimeout(() => {
-    alert.remove();
+    alertElement.remove();
   }, ALERT_SHOW_TIME);
 };
 
