@@ -3,16 +3,6 @@ import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 import { reset, editImage } from './edit-image.js';
 
-const uploadPictureForm = document.querySelector('.img-upload__form');
-const uploadPictureOverlay = uploadPictureForm.querySelector('.img-upload__overlay');
-const closeButton = uploadPictureForm.querySelector('.img-upload__cancel');
-const hashtagsField = uploadPictureForm.querySelector('.text__hashtags');
-const descriptionField = uploadPictureForm.querySelector('.text__description');
-const submitButton = document.querySelector('.img-upload__submit');
-const uploadImageField = uploadPictureForm.querySelector('.img-upload__input');
-const uploadImagePreview = uploadPictureForm.querySelector('.img-upload__preview img');
-const effectsPreview = uploadPictureForm.querySelectorAll('.effects__preview');
-
 const hashtagExp = /^#[a-zа-яë0-9]{1,19}$/i;
 const HASHTAGS = 5;
 
@@ -23,15 +13,25 @@ const SubmitButtonText = {
   IDLE: 'ОПУБЛИКОВАТЬ',
 };
 
-const formPristine = new Pristine(uploadPictureForm, {
-  classTo: 'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  errorTextParent: 'img-upload__field-wrapper', // Элемент, куда будет выводиться текст с ошибкой
-  errorTextTag: 'p', // Тег, который будет обрамлять текст ошибки
-  errorTextClass: 'img-upload__field-wrapper--error' // Класс для элемента с текстом ошибки
+const uploadPictureFormElement = document.querySelector('.img-upload__form');
+const uploadPictureOverlayElement = uploadPictureFormElement.querySelector('.img-upload__overlay');
+const closeButtonElement = uploadPictureFormElement.querySelector('.img-upload__cancel');
+const hashtagsFieldElement = uploadPictureFormElement.querySelector('.text__hashtags');
+const descriptionFieldElement = uploadPictureFormElement.querySelector('.text__description');
+const submitButtonElement = document.querySelector('.img-upload__submit');
+const uploadImageFieldElement = uploadPictureFormElement.querySelector('.img-upload__input');
+const uploadImagePreviewElement = uploadPictureFormElement.querySelector('.img-upload__preview img');
+const effectsPreviewElements = uploadPictureFormElement.querySelectorAll('.effects__preview');
+
+const formPristine = new Pristine(uploadPictureFormElement, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'p',
+  errorTextClass: 'img-upload__field-wrapper--error'
 });
 
 const checkValidHashtag = () => {
-  const valueArray = hashtagsField.value.trim().split(' ').map((element) => element.toLowerCase());
+  const valueArray = hashtagsFieldElement.value.trim().split(' ').map((element) => element.toLowerCase());
 
   if (valueArray[0] === '') {
     return true;
@@ -40,17 +40,13 @@ const checkValidHashtag = () => {
   return valueArray.every((element) => element.match(hashtagExp));
 };
 
-formPristine.addValidator(hashtagsField, checkValidHashtag, 'введён невалидный хэш-тег');
-
 const checkCountHashtag = () => {
-  const string = hashtagsField.value.trim().split(' ').map((element) => element.toLowerCase());
+  const string = hashtagsFieldElement.value.trim().split(' ').map((element) => element.toLowerCase());
   return (string.length <= HASHTAGS);
 };
 
-formPristine.addValidator(hashtagsField, checkCountHashtag, 'превышено количество хэш-тегов');
-
 const checkUniqueHashtag = () => {
-  const string = hashtagsField.value.trim().split(' ').map((element) => element.toLowerCase());
+  const string = hashtagsFieldElement.value.trim().split(' ').map((element) => element.toLowerCase());
   if (string.length > 1) {
     for (let i = 1; i <= string.length; i++) {
       if (string[i] === string[i - 1]) {
@@ -61,73 +57,63 @@ const checkUniqueHashtag = () => {
   return true;
 };
 
-formPristine.addValidator(hashtagsField, checkUniqueHashtag, 'хэш-теги повторяются');
-
-const openModal = () => {
-  editImage();
-  uploadPictureOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onModalKeydown);
-};
-
 const closeModal = () => {
-  uploadPictureForm.reset();
+  uploadPictureFormElement.reset();
   formPristine.reset();
-  uploadPictureOverlay.classList.add('hidden');
+  uploadPictureOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onModalKeydown);
   reset();
 };
-
-const onCloseButtonClick = () => closeModal();
-closeButton.addEventListener('click', onCloseButtonClick);
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
   formPristine.validate();
 };
 
-uploadPictureForm.addEventListener('submit', onFormSubmit);
-
 function onModalKeydown(evt) {
-  if (isEscapeKey(evt) && !(document.querySelector('.message')) && !(document.activeElement === hashtagsField || document.activeElement === descriptionField)) {
+  if (isEscapeKey(evt) && !(document.querySelector('.message')) && !(document.activeElement === hashtagsFieldElement || document.activeElement === descriptionFieldElement)) {
     evt.preventDefault();
     closeModal();
   }
 }
 
 const showImagePreview = () => {
-  const uploadedFile = uploadImageField.files[0];
+  const uploadedFile = uploadImageFieldElement.files[0];
   const isCorrectType = UPLOAD_FILE_TYPES.some((fileType) => uploadedFile.name.toLowerCase().endsWith(fileType));
 
   if (isCorrectType) {
-    uploadImagePreview.src = URL.createObjectURL(uploadedFile);
-    Array.from(effectsPreview).forEach((el) => {
+    uploadImagePreviewElement.src = URL.createObjectURL(uploadedFile);
+    Array.from(effectsPreviewElements).forEach((el) => {
       el.style.backgroundImage = `url(${URL.createObjectURL(uploadedFile)})`;
     });
   }
 };
 
-const onUploadFieldClick = () => showImagePreview();
-uploadImageField.addEventListener('change', onUploadFieldClick);
-
 const toggleSubmitButton = (isDisabled) => {
-  submitButton.disabled = isDisabled;
+  submitButtonElement.disabled = isDisabled;
 
   if (isDisabled) {
-    submitButton.textContent = SubmitButtonText.SUBMITTING;
+    submitButtonElement.textContent = SubmitButtonText.SUBMITTING;
   } else {
-    submitButton.textContent = SubmitButtonText.IDLE;
+    submitButtonElement.textContent = SubmitButtonText.IDLE;
   }
 };
 
+const openModal = () => {
+  editImage();
+  uploadPictureOverlayElement.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onModalKeydown);
+};
+
 const setOnFormSubmit = (callback) => {
-  uploadPictureForm.addEventListener('submit', async (evt) => {
+  uploadPictureFormElement.addEventListener('submit', async (evt) => {
     evt.preventDefault();
     const isValid = formPristine.validate();
     if(isValid) {
       toggleSubmitButton(true);
-      await callback(new FormData(uploadPictureForm));
+      await callback(new FormData(uploadPictureFormElement));
       toggleSubmitButton();
     }
   });
@@ -140,8 +126,18 @@ setOnFormSubmit(async (data) => {
     showSuccessMessage();
   } catch {
     showErrorMessage();
-    //document.removeEventListener('keydown', onModalKeydown);
   }
 });
+
+const onUploadFieldClick = () => showImagePreview();
+const onCloseButtonClick = () => closeModal();
+
+formPristine.addValidator(hashtagsFieldElement, checkUniqueHashtag, 'хэш-теги повторяются');
+formPristine.addValidator(hashtagsFieldElement, checkValidHashtag, 'введён невалидный хэш-тег');
+formPristine.addValidator(hashtagsFieldElement, checkCountHashtag, 'превышено количество хэш-тегов');
+
+uploadPictureFormElement.addEventListener('submit', onFormSubmit);
+uploadImageFieldElement.addEventListener('change', onUploadFieldClick);
+closeButtonElement.addEventListener('click', onCloseButtonClick);
 
 export { openModal, formPristine };

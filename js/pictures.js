@@ -3,36 +3,36 @@ import {openFullSizePicture} from './full-size-pictures.js';
 const ALERT_SHOW_TIME = 5000;
 
 const showAlert = (message) => {
-  const alert = document.createElement('div');
-  alert.style.position = 'absolute';
-  alert.style.zIndex = '20';
-  alert.style.left = '0';
-  alert.style.top = '0';
-  alert.style.right = '0';
-  alert.style.color = 'red';
-  alert.style.fontSize = '30px';
-  alert.style.textAlign = 'center';
-  alert.textContent = message;
-  document.body.append(alert);
+  const alertElement = document.createElement('div');
+  alertElement.style.position = 'absolute';
+  alertElement.style.zIndex = '20';
+  alertElement.style.left = '0';
+  alertElement.style.top = '0';
+  alertElement.style.right = '0';
+  alertElement.style.color = 'red';
+  alertElement.style.fontSize = '30px';
+  alertElement.style.textAlign = 'center';
+  alertElement.textContent = message;
+  document.body.append(alertElement);
 
   setTimeout(() => {
     alert.remove();
   }, ALERT_SHOW_TIME);
 };
 
-const pictureList = document.querySelector('.pictures');
+const pictureListElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content;
 const pictureFragment = document.createDocumentFragment();
 
 const clearPictures = () => {
-  const pictures = pictureList.querySelectorAll('.picture');
+  const pictureElements = pictureListElement.querySelectorAll('.picture');
 
-  if (!pictures) {
+  if (!pictureElements) {
     return;
   }
 
-  for (let i = pictures.length - 1; i >= 0; i--) {
-    pictures[i].remove();
+  for (let i = pictureElements.length - 1; i >= 0; i--) {
+    pictureElements[i].remove();
   }
 };
 
@@ -49,11 +49,11 @@ const createPictureCards = (data) => {
 
   clearPictures();
 
-  pictureList.addEventListener('click', openFullSizePicture);
+  pictureListElement.addEventListener('click', openFullSizePicture);
 
-  pictureList.append(pictureFragment);
+  pictureListElement.append(pictureFragment);
 
-  return pictureList;
+  return pictureListElement;
 };
 
-export {createPictureCards, pictureList, showAlert};
+export {createPictureCards, pictureListElement, showAlert};

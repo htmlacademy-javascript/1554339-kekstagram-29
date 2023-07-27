@@ -23,7 +23,7 @@ const createRandomId = (min, max) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const debaunce = (cb, delay = 500) => {
+const debounce = (cb, delay = 500) => {
   let timeoutId;
 
   return (...rest) => {
@@ -32,4 +32,4 @@ const debaunce = (cb, delay = 500) => {
   };
 };
 
-export {getRandomInteger, getRandomArrayElement, createRandomId, isEscapeKey, debaunce};
+export {getRandomInteger, getRandomArrayElement, createRandomId, isEscapeKey, debounce};
