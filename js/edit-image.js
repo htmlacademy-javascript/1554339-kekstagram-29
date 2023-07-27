@@ -1,16 +1,3 @@
-const uploadForm = document.querySelector('.img-upload__form');
-const imagePreview = uploadForm.querySelector('.img-upload__preview');
-const buttonMinus = uploadForm.querySelector('.scale__control--smaller');
-const buttonPlus = uploadForm.querySelector('.scale__control--bigger');
-
-const fieldScaleImage = uploadForm.querySelector('.scale__control--value');
-const listFiltersElement = uploadForm.querySelector('.effects__list');
-const sliderEffectsContainer = uploadForm.querySelector('.img-upload__effect-level');
-const filterSlider = sliderEffectsContainer.querySelector('.effect-level__slider');
-const fieldFilterValue = sliderEffectsContainer.querySelector('.effect-level__value');
-
-let currentEffect = 'none';
-
 const filters = {
 
   chrome: {
@@ -61,6 +48,19 @@ const scale = {
   MAX: 100
 };
 
+const uploadFormElement = document.querySelector('.img-upload__form');
+const imagePreviewElement = uploadFormElement.querySelector('.img-upload__preview');
+const buttonMinusElement = uploadFormElement.querySelector('.scale__control--smaller');
+const buttonPlusElement = uploadFormElement.querySelector('.scale__control--bigger');
+
+const fieldScaleImageElement = uploadFormElement.querySelector('.scale__control--value');
+const listFiltersElement = uploadFormElement.querySelector('.effects__list');
+const sliderEffectsContainerElement = uploadFormElement.querySelector('.img-upload__effect-level');
+const filterSliderElement = sliderEffectsContainerElement.querySelector('.effect-level__slider');
+const fieldFilterValueElement = sliderEffectsContainerElement.querySelector('.effect-level__value');
+
+let currentEffect = 'none';
+
 const updateSliderSettings = (filterName) => {
   const sliderSetting = {
     connect: 'lower',
@@ -94,14 +94,14 @@ const updateSliderSettings = (filterName) => {
   return sliderSetting;
 };
 
-const updateFilterSlider = (filter) => filterSlider.noUiSlider.updateOptions(updateSliderSettings(filter));
+const updateFilterSlider = (filter) => filterSliderElement.noUiSlider.updateOptions(updateSliderSettings(filter));
 
-const setChoisenEffect = () => {
+const setEffect = () => {
   if (currentEffect === 'none') {
-    sliderEffectsContainer.classList.add('hidden');
-    imagePreview.removeAttribute('style');
+    sliderEffectsContainerElement.classList.add('hidden');
+    imagePreviewElement.removeAttribute('style');
   } else {
-    sliderEffectsContainer.classList.remove('hidden');
+    sliderEffectsContainerElement.classList.remove('hidden');
     updateFilterSlider(filters[currentEffect]);
   }
 };
@@ -111,7 +111,7 @@ const onFilterClick = (evt) => {
 
   if (effectsRadio) {
     currentEffect = effectsRadio.value;
-    setChoisenEffect();
+    setEffect();
   }
 };
 
@@ -119,43 +119,35 @@ const onSliderUpdate = () => {
   const currentFilter = filters[currentEffect];
   if (currentFilter) {
     const valueUnits = currentFilter.valueUnits;
-    imagePreview.style.filter = `${currentFilter.value}(${filterSlider.noUiSlider.get()}${valueUnits})`;
+    imagePreviewElement.style.filter = `${currentFilter.value}(${filterSliderElement.noUiSlider.get()}${valueUnits})`;
   }
 
-  fieldFilterValue.value = filterSlider.noUiSlider.get();
-};
-
-const createFilterSlider = () => {
-  noUiSlider.create(filterSlider, updateSliderSettings());
-
-  setChoisenEffect();
-  filterSlider.noUiSlider.on('update', onSliderUpdate);
-  listFiltersElement.addEventListener('click', onFilterClick);
+  fieldFilterValueElement.value = filterSliderElement.noUiSlider.get();
 };
 
 const setScale = (value) => {
-  imagePreview.style.transform = `scale(${value / 100})`;
-  fieldScaleImage.removeAttribute('value');
-  fieldScaleImage.setAttribute('value', `${value}%`);
+  imagePreviewElement.style.transform = `scale(${value / 100})`;
+  fieldScaleImageElement.removeAttribute('value');
+  fieldScaleImageElement.setAttribute('value', `${value}%`);
 };
 
 const onButtonMinusClick = () => {
-  const scaleValue = parseInt(fieldScaleImage.value.replace('%', ''), 10) - scale.STEP;
+  const scaleValue = parseInt(fieldScaleImageElement.value.replace('%', ''), 10) - scale.STEP;
 
   if (scaleValue >= scale.MIN) {
-    fieldScaleImage.removeAttribute('value');
-    fieldScaleImage.setAttribute('value', `${scaleValue}%`);
+    fieldScaleImageElement.removeAttribute('value');
+    fieldScaleImageElement.setAttribute('value', `${scaleValue}%`);
     setScale(scaleValue);
   }
 };
 
 const onButtonPlusClick = () => {
-  const scaleValue = parseInt(fieldScaleImage.value.replace('%', ''), 10) + scale.STEP;
+  const scaleValue = parseInt(fieldScaleImageElement.value.replace('%', ''), 10) + scale.STEP;
 
   if (scaleValue <= scale.MAX) {
-    fieldScaleImage.removeAttribute('value');
+    fieldScaleImageElement.removeAttribute('value');
     const value = `${scaleValue}%`;
-    fieldScaleImage.setAttribute('value', value);
+    fieldScaleImageElement.setAttribute('value', value);
     setScale(scaleValue);
   }
 };
@@ -163,14 +155,22 @@ const onButtonPlusClick = () => {
 const reset = () => {
   setScale(100);
   currentEffect = 'none';
-  setChoisenEffect();
-  filterSlider.noUiSlider.destroy();
+  setEffect();
+  filterSliderElement.noUiSlider.destroy();
+};
+
+const createFilterSlider = () => {
+  noUiSlider.create(filterSliderElement, updateSliderSettings());
+
+  setEffect();
+  filterSliderElement.noUiSlider.on('update', onSliderUpdate);
+  listFiltersElement.addEventListener('click', onFilterClick);
 };
 
 const editImage = () => {
   createFilterSlider();
-  buttonMinus.addEventListener('click', onButtonMinusClick);
-  buttonPlus.addEventListener('click', onButtonPlusClick);
+  buttonMinusElement.addEventListener('click', onButtonMinusClick);
+  buttonPlusElement.addEventListener('click', onButtonPlusClick);
 };
 
 

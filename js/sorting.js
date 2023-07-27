@@ -8,22 +8,18 @@ const FiltersList = {
   DISCUSSED: 'discussed'
 };
 
-const filters = document.querySelector('.img-filters');
-const filtersForm = filters.querySelector('.img-filters__form');
+const filtersElement = document.querySelector('.img-filters');
+const filtersFormElement = filtersElement.querySelector('.img-filters__form');
 
 let filterButton;
 
-const changeActiveFilter = (choisenFilter) => {
-  const activeFilter = filters.querySelector('.img-filters__button--active');
+const changeActiveFilter = (selectedFilter) => {
+  const activeFilterElement = filtersElement.querySelector('.img-filters__button--active');
 
-  if (choisenFilter !== activeFilter) {
-    activeFilter.classList.remove('img-filters__button--active');
-    choisenFilter.classList.add('img-filters__button--active');
+  if (selectedFilter !== activeFilterElement) {
+    activeFilterElement.classList.remove('img-filters__button--active');
+    selectedFilter.classList.add('img-filters__button--active');
   }
-};
-
-const onFilterDefaultClick = (data) => {
-  createPictureCards(data);
 };
 
 const onFilterRandomClick = (data) => {
@@ -41,6 +37,10 @@ const onFilterDiscussedClick = (data) => {
   createPictureCards(mostDiscussedPictures);
 };
 
+const onFilterDefaultClick = (data) => {
+  createPictureCards(data);
+};
+
 const onFilterClick = (data) => {
   if (filterButton.id.endsWith(FiltersList.DEFAULT)) {
     onFilterDefaultClick(data);
@@ -52,9 +52,9 @@ const onFilterClick = (data) => {
 };
 
 const setFilters = (cb) => {
-  filters.classList.remove('img-filters--inactive');
+  filtersElement.classList.remove('img-filters--inactive');
 
-  filtersForm.addEventListener('click', (evt) => {
+  filtersFormElement.addEventListener('click', (evt) => {
     filterButton = evt.target;
     if (filterButton.classList.contains('img-filters__button')) {
       changeActiveFilter(filterButton);

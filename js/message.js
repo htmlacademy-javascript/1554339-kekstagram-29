@@ -1,6 +1,6 @@
-const successMessage = document.querySelector('#success').content.querySelector('.success');
-const errorMessage = document.querySelector('#error').content.querySelector('.error');
-const body = document.querySelector('body');
+const successMessageElement = document.querySelector('#success').content.querySelector('.success');
+const errorMessageElement = document.querySelector('#error').content.querySelector('.error');
+const bodyElement = document.querySelector('body');
 
 const onOutSideClick = (evt) => {
   if (evt.target.closest('.success__inner') || evt.target.closest('.error__inner')) {
@@ -19,24 +19,24 @@ const onDocumentKeydown = (evt) => {
 function hideMessage() {
   document.querySelector('.message').remove();
   document.removeEventListener('keydown', onDocumentKeydown);
-  body.removeEventListener('click', onOutSideClick);
+  bodyElement.removeEventListener('click', onOutSideClick);
 }
 
 const showMessage = (elemMessage, closeButtonClass) => {
-  body.append(elemMessage);
+  bodyElement.append(elemMessage);
   elemMessage.classList.add('message');
   elemMessage.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
-  body.addEventListener('click', onOutSideClick);
+  bodyElement.addEventListener('click', onOutSideClick);
   elemMessage.querySelector(closeButtonClass).addEventListener('click', hideMessage);
 };
 
 const showSuccessMessage = () => {
-  showMessage(successMessage, '.success__button');
+  showMessage(successMessageElement, '.success__button');
 };
 
 const showErrorMessage = () => {
-  showMessage(errorMessage, '.error__button');
+  showMessage(errorMessageElement, '.error__button');
 };
 
 export { showSuccessMessage, showErrorMessage };
